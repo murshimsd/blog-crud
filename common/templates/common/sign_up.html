@@ -1,0 +1,124 @@
+{% extends 'common/master.html' %}
+{% load static %}
+{% block title %} sign up  {% endblock %}
+{% block header %}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<style>
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    input[type="file"] {
+      margin-top: 10px;
+    }
+    
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<h2>Create an Account</h2>
+  <form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <span id="span_mail"></span>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required><br><br>
+    
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select><br><br>
+    
+    <label for="photo">Photo:</label>
+    <input type="file" id="photo" name="photo" accept="image/*" required><br><br>
+    
+    <input type="submit" value="Sign Up">
+    {{ msg }}
+  </form>
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+  <script>
+        $("#email").change(function(){
+        $.ajaxSetup({
+                headers: {
+
+                    "X-CSRFToken": '{{ csrf_token }}'
+
+                }
+            })
+
+            $.ajax({
+
+                url : "{% url 'common:check_mail' %}",
+                method : 'POST',
+                data : {
+                    "userEmail" : $(this).val()
+
+                },
+                success : function(response){
+                    let exist = response.email_exist
+                    if (exist == true){
+
+                        $("#span_mail").html('email already exist').css({"color":"red","font-size":"larger","margin-right":"300px"})
+
+                    }
+                  
+                }
+
+
+
+            })
+    })
+</script>
+  </script>
+{% endblock %}

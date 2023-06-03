@@ -1,0 +1,114 @@
+{% extends 'user/master.html' %}
+{% load static %}
+{% block title %} my blogs {% endblock %}
+{% block header %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0;
+    }
+
+    .post {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 5, 0.1);
+        display: flex;
+    }
+
+    .post-image {
+        max-width: 100%;
+        height: auto;
+        margin-right: 20px;
+    }
+
+    .post-content {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .blog {
+        width: 900px;
+        /* Set the desired width for the div */
+        overflow: auto;
+        /* Add a scrollbar if content exceeds the div's dimensions */
+        word-wrap: break-word;
+        /* Wrap long words to the next line */
+        white-space: normal;
+        /* Allow normal wrapping of content */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<header>
+    <h1>my blogs</h1>
+</header>
+<div class="container">
+    <div class="row">
+        {% for blog in blogs %}
+        
+            <div class="col" style="margin-top: 10px;">
+
+
+                <div class="post" style="margin-left: 30px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <img src="{{ blog.blogger_name.photo.url }}" alt="Profile Picture" class="post-image"
+                                    style="height: 50px; width: 50px; border-radius: 20px;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 style="margin-top: 5px;">from : {{ blog.blogger_name.name }}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="post-title">{{ blog.title }}</h2>
+                        <p class="post-date">{{ blog.date_column }}</p>
+                        <div class="blog">
+                            <span>{{ blog.content }}</span>
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+                <div class="container">
+                    <div class="row" style="margin-top: -20px;">
+                        <div class="col " style="margin-left: 400px; ;"><a href="{% url 'user:update_form' blog.id  %}"><input type="button" value="update" class="btn btn-dark" style="width: 170px" ></a>
+                           <a href="{% url 'user:delete' blog.id  %}"><input type="button" value="delete" class="btn btn-danger" style="margin-left: 5px;" ></a></div>
+                        
+                            
+                    
+                </div>
+            </div>
+        
+
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

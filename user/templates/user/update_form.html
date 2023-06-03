@@ -1,0 +1,112 @@
+{% extends 'user/master.html' %}
+{% load static %}
+{% block title %} updation {% endblock %}
+{% block header %}
+
+
+
+<style>
+  
+
+    .container {
+      display: flex;
+      align-items: flex-start;
+      width: 800px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+    }
+
+    .profile {
+      flex: 1;
+      padding-right: 20px;
+    }
+
+    .profile img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .form-container {
+      flex: 2;
+      padding-left: 20px;
+    }
+
+    .form-field {
+      margin-bottom: 10px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-field textarea {
+      width: 100%;
+      height: 250px;
+      resize: vertical;
+    }
+    #styled-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 45%;
+    margin-top: 20px;
+  }
+
+  .styled-button:hover {
+    background-color: #45a049;
+  }
+  
+</style>
+{% endblock %}
+{% block content %}
+
+<body><form action="" method="POST">
+    {% csrf_token %}
+    <div class="container">
+      
+      
+      <div class="form-container" id="form-container">
+        <div class="form-field">
+          <label for="title">Title:</label>
+          
+          <input type="text" id="title" name="title" value="{{ blog.title }}">
+        </div>
+        
+        <div class="form-field">
+          <label for="content">Content:</label>
+          <textarea id="content" name="content" >{{ blog.content }}</textarea>
+        </div>
+        {{ msg }}
+        
+      </div>
+      <input type="submit" value="Update" class="btn btn-dark" style="width: 100px;" >
+      <input type="button" value="Clear Blog" class="btn btn-light" style="margin-left: 5px;" onclick="clearTextarea()" >
+      
+    </div>
+  
+   </form>
+   <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+   <script>
+   function clearTextarea() {
+   document.getElementById("content").value = "";
+   document.getElementById("title").value = '';
+ }
+   </script>
+  
+    
+{% endblock %}

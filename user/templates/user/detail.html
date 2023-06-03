@@ -1,0 +1,136 @@
+{% extends 'user/master.html' %}
+{% load static %}
+{% block title %} home {% endblock %}
+{% block header %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  h1 {
+    margin: 0;
+  }
+
+  .post {
+    margin-bottom: 30px;
+    margin-top: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    width: 950px;
+    margin-left: 40px;
+  }
+
+  .post-image {
+    max-width: 100%;
+    height: auto;
+    margin-right: 20px;
+  }
+
+  .post-content {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .like-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .like-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .like-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 50%;
+  }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="post">
+  <div class="con">
+    <div class="row">
+      <div class="col">
+        <h5>{{ blogs.blogger_name.name }}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <img src="{{ blogs.blogger_name.photo.url }}" alt="Profile Picture" class="post-image"
+          style="height: 40px;width: 40px;border-radius: 20px;">
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-left: 10px;">
+    <h2 class="post-title">{{ blogs.title }}</h2>
+
+    <p class="post-content">{{ blogs.content }}</p>
+    
+    
+  </div>
+  
+  <div class="like-container">
+    <form action="" method="POST">
+      {% csrf_token %}
+    <a href="{% url 'user:like_blog' %}">
+      <input type="submit" class="like-button" value="❤" b_id="{{ blogs.id }}"></a>
+      </form>
+    <span class="like-count">0</span>
+
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.like-button').click(function (e) {
+      e.preventDefault();
+      var blogId = parseInt($(this).attr('b_id')) 
+      $.ajaxSetup({
+        headers: {
+
+          "X-CSRFToken": '{{ csrf_token }}'
+
+        }
+      })
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'user:like_blog' %}",
+        data: {
+          'blog_id':blogId,
+          
+        },
+        success: function (response) {
+          // Update the like count on the page
+          $('.like-count').text(response.likes);
+
+          // Disable the like button after a user likes the blog
+          $('.like-button').prop('disabled', true);
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        }
+      });
+
+
+
+
+    });
+  });
+</script>
+
+{% endblock %}

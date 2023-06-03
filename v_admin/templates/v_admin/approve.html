@@ -1,0 +1,50 @@
+{% extends 'v_admin/master_page.html' %}
+{% load static %}
+{% block title %} home {% endblock %}
+{% block header %}
+<style>
+        .blog {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      overflow: auto;
+        /* Add a scrollbar if content exceeds the div's dimensions */
+        word-wrap: break-word;
+        /* Wrap long words to the next line */
+        white-space: normal;
+      width: 80%;
+      margin-left: 30px;
+      height: 100%;
+    }
+    
+    .blog h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .blog p {
+      font-size: 14px;
+    }
+    
+    .blog-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+    
+    .blog-buttons button {
+      margin-left: 5px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="blog">
+    <h2 style="margin-left: 30px;"> Title - {{ blog.title }}</h2>
+    <p style="margin-left: 30px;">{{ blog.content }}</p>
+    <div class="blog-buttons">
+      <a href="{% url 'v_admin:approved' blog.id %}"><button class="btn btn-success">Approve</button></a>
+      <a href="{% url 'v_admin:delete' blog.id %}"><button class="btn btn-danger">Remove</button></a>
+    </div>
+  </div>
+{% endblock %}
