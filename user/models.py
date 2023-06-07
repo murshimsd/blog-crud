@@ -15,14 +15,33 @@ class User(models.Model):
         db_table = 'user_tb'
 
 
+
+
+
+
+
 class Blog(models.Model) :
     blogger_name = models.ForeignKey(User,on_delete=models.CASCADE)
     title = models.CharField(max_length=1000)
     content = models.TextField()
     likes = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=30,default='')
-    users_liked = models.ManyToManyField(User, related_name='liked_categories')
     date_column = models.DateField(default=timezone.now)
     
     class Meta:
         db_table = 'blog_tb'
+
+
+
+
+
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'blog')
+        db_table = 'like_tb'

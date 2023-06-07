@@ -76,7 +76,7 @@
 {% endblock %}
 {% block content %}
 
-<body><form action="" method="POST">
+<body><form action="" method="POST" id="myForm">
     {% csrf_token %}
     <div class="container">
       <div class="profile">
@@ -92,16 +92,18 @@
           <label for="title">Title:</label>
           
           <input type="text" id="title" name="title" placeholder="Enter the title" value="">
+          <span id="s_title"></span>
         </div>
         
         <div class="form-field">
           <label for="content">Content:</label>
           <textarea id="content" name="content" placeholder="Enter the content" ></textarea>
+          <span id="s_content"></span>
         </div>
         {{ msgs }}
         
       </div>
-      <input type="submit" value="post" class="btn btn-success" >
+      <input type="button" value="post" class="btn btn-success" id="submitButton" onclick="validate()" >
       <input type="button" value="clear" class="btn btn-secondary" style="margin-left: 5px;" onclick="clearTextarea()" >
       
     </div>
@@ -114,6 +116,50 @@
   document.getElementById("content").value = "";
   document.getElementById("title").value = '';
 }
+function validate() {
+            var title = document.getElementById("title")
+            var content = document.getElementById("content")
+           
+            var s_title = document.getElementById("s_title")
+            var s_content = document.getElementById("s_content")
+         
+            status = 1
+
+            
+            if (title.value == "") {
+                status = 0
+                s_title.innerHTML = "enter the title"
+                s_title.style.color = "red"
+                s_title.style.display = "block"
+            }
+            else {
+                status = 1
+                s_title.style.display = "none"
+            }
+            if (content.value == "") {
+                status = 0
+                s_content.innerHTML = "enter the title"
+                s_content.style.color = "red"
+                s_content.style.display = "block"
+            }
+            else {
+                status = 1
+                s_content.style.display = "none"
+            }
+            document.getElementById('submitButton').addEventListener('click', function(e) {
+  var form = document.getElementById('myForm');
+  if (!form.checkValidity()) {
+    e.preventDefault(); // Prevent form submission if validation fails
+    // Add your custom validation logic here
+    // Display error messages or highlight invalid fields
+  }else {
+    document.getElementById('submitButton').type = 'submit'; // Change the button type to 'submit'
+  }
+});
+            
+            
+        }
+
   </script>
     
 {% endblock %}

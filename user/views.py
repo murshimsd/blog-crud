@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from user.models import Blog
 from .decorator import auth_user
-from .models import User
+from .models import Like, User
+
 
 
 
@@ -14,9 +15,17 @@ def home(request):
 
 
 
+
+
+
+
 def user_blogs(request,uid) :
     blogs = Blog.objects.filter(blogger_name_id = uid,status = 'approved')
     return render(request,'user/user_blogs.html',{"blogs":blogs})
+
+
+
+
 
 
 
@@ -24,10 +33,19 @@ def user_blogs(request,uid) :
 def master(request):
     return render(request,'user/master.html')
 
+
+
+
+
+
 @auth_user
 def detail(request,bid):
     blogs = Blog.objects.get(id=bid)
-    return render(request,'user/detail.html',{"blogs":blogs})
+    like_count = Like.objects.filter(blog_id=blogs.id).count()
+    return render(request,'user/detail.html',{"blogs":blogs,'like':like_count})
+
+
+
 
 
 @auth_user
@@ -51,11 +69,16 @@ def add(request):
     return render(request,'user/add.html',{"user":users,"msgs":msg})
 
 
+
+
+
 @auth_user
 def logout(request) :
     del request.session['user']
     request.session.flush()
     return redirect('common:home')
+
+
 
 
 
@@ -76,6 +99,8 @@ def update_form(request,bb_id):
 
 
 
+
+
 @auth_user
 def delete(request,bbb_id):
     blog = Blog.objects.get(id=bbb_id)
@@ -87,27 +112,25 @@ def delete(request,bbb_id):
 
 
 
-    
+
 @auth_user
 def like_blog(request):
-    if request.method == 'POST':
-        blog_id = int(request.POST.get('blog_id'))
-        
-        # Assuming you have a Blog model with a 'likes' field and a ManyToManyField for users who liked the blog
-        blog = Blog.objects.get(id=blog_id)
-        
-        # Get the currently logged-in user (assuming you have implemented user authentication)
-        user = request.user
-        
-        if user in blog.users_liked.all():
-            # User has already liked the blog, return the current like count
-            return JsonResponse({'like_count': blog.likes})
-        
-        # User has not liked the blog before, increment the like count and add the user to the liked users list
-        blog.likes += 1
-        blog.users_liked.add(user)
-        blog.save()
+    blog_id = request.POST.get('blog_id')
+    blog = Blog.objects.get(id=blog_id)
+    user = request.session['user']
 
-        return JsonResponse({'like_count': blog.likes})
+    
+    if Like.objects.filter(user_id=user, blog_id=blog.id).exists():
+        return JsonResponse({'success': False})
+
+
+    Like.objects.create(user_id=user, blog_id=blog.id)
+    like_count = Like.objects.filter(blog_id=blog.id).count()
+
+
+    return JsonResponse({'success': True, 'like_count': like_count})
+
+
+       
 
         

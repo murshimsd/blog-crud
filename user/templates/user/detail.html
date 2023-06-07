@@ -61,6 +61,7 @@
 
 {% endblock %}
 {% block content %}
+
 <div class="post">
   <div class="con">
     <div class="row">
@@ -90,47 +91,49 @@
     <a href="{% url 'user:like_blog' %}">
       <input type="submit" class="like-button" value="❤" b_id="{{ blogs.id }}"></a>
       </form>
-    <span class="like-count">0</span>
+    <span class="like-count" id="like-count-{{ blog.id }}">{{ like }} </span>  {{ blog.likes }}</span>
 
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('.like-button').click(function (e) {
+    $(document).ready(function() {
+    $(".like-button").click(function(e) {
       e.preventDefault();
-      var blogId = parseInt($(this).attr('b_id')) 
-      $.ajaxSetup({
-        headers: {
+      var blogId = $(this).attr("b_id");
+      var csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 
-          "X-CSRFToken": '{{ csrf_token }}'
-
-        }
-      })
       $.ajax({
-        type: 'POST',
+        type: "POST",
         url: "{% url 'user:like_blog' %}",
         data: {
-          'blog_id':blogId,
-          
+          blog_id:parseInt(blogId),
+          csrfmiddlewaretoken: csrfToken
         },
-        success: function (response) {
-          // Update the like count on the page
-          $('.like-count').text(response.likes);
-
-          // Disable the like button after a user likes the blog
-          $('.like-button').prop('disabled', true);
+        dataType: "json",
+        success: function(response) {
+          if (response.success) {
+            var likeCount = response.like_count;
+            $(".like-count").text(likeCount);
+          } else {
+            alert("You have already liked this blog.");
+          }
         },
-        error: function (xhr, status, error) {
-          console.error(xhr.responseText);
+        error: function(xhr, textStatus, error) {
+          console.log(xhr.statusText);
         }
       });
-
-
-
-
     });
   });
+
+
+
+
+
+
+
+  
+
 </script>
 
 {% endblock %}

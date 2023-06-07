@@ -9,10 +9,21 @@ img{
     width: 900px;
     margin-left: 70px;
     margin-top: 30px;
-    border-radius: 22px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
 }
 </style>
 {% endblock %}
 {% block content %}
-<img src="{% static 'images/home.jpg' %}" alt="">
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <img src="{% static 'images/blog1.jpg' %}" alt="">
+        </div>
+        <div class="col-4">
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}
